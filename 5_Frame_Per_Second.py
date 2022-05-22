@@ -14,6 +14,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 # 화면 타이틀 설정
 pygame.display.set_caption("My first Game")  # 게임 이름
 
+# FPS (Frame Per Second)
+clock = pygame.time.Clock()
+
 # 배경이미지 불러오기
 background = pygame.image.load(
     r"C:\python_workspace\python_application\game_py\background.png")
@@ -31,9 +34,20 @@ character_y_pos = screen_height - character_height  # 화면 세로 크기 가�
 to_x = 0
 to_y = 0
 
+# 이동속도
+character_speed = 50
+
 # event loop --> enables the tabs( event loop이 있어야 창이 꺼지지 않는다.)--> 사용자의 동작을 검사함.
 running = True  # 게임이 진행중인가?
 while running:
+    dt = clock.tick(10)  # dt --> delta  ()--> 안에 원하는 초당 프레임 수 넣기
+
+    # 캐릭터가  100 만큼 이동을 해야함
+    # 10 fps : 1초 동안에 10번 동작 -> 1번에 10만큼 이동해야 함
+    # 20 fps : 1초 동안에 20 번 동장 -> 1번에 5만큼 이동해야 함
+
+    # ** print("fps : " + str(clock.get_fps()))  # ___.get_fps()
+
     # pygame 을 쓰기 위해 무조건 ㄴ써야하는 내용 pygame.event.get(event.type)
     for event in pygame.event.get():  # 어떤 이벤트가 발생 하였는가?? 사용자가 키보드를 클릭하는지 ...등등 체크
         if event.type == pygame.QUIT:  # 창이 닫히는 이벤트가 발생하였는가??
@@ -42,13 +56,13 @@ while running:
         if event.type == pygame.KEYDOWN:  # 키가 눌러졌는지 확인
             if event.key == pygame.K_LEFT:  # 캐릭터를 왼쪽으로
                 # pass  # 실행코드가 없는것으로 다음 행동을 계속해서 진행시킨다.
-                to_x -= 5
+                to_x -= character_speed
             elif event.key == pygame.K_RIGHT:
-                to_x += 5
+                to_x += character_speed
             elif event.key == pygame.K_UP:
-                to_y -= 5
+                to_y -= character_speed
             elif event.key == pygame.K_DOWN:
-                to_y += 5
+                to_y += character_speed
 
         if event.type == pygame.KEYUP:  # 방향키를 떼면 멈춤
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -58,6 +72,7 @@ while running:
                 to_y = 0
                 # to_y += 0
 
+# 프레임에 따라 캐릭터의 속도가 달라지지 않게 보정이 필요함
     character_x_pos += to_x
     character_y_pos += to_y
 
@@ -75,7 +90,7 @@ while running:
     elif character_y_pos < 0:
         character_y_pos = 0
 
-    screen.blit(background, (0, 0))  # 배경 그리기
+    screen.blit(background, (0, 0))  # 배경 그리기 (좌표 설정)
 
     screen.blit(character, (character_x_pos, character_y_pos))  # 캐릭터 그리기
     # screen.fill(0,0,0) --> rgb 값을 넣어서 배경색 그리기
